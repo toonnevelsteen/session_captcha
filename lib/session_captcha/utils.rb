@@ -1,13 +1,13 @@
 require 'digest/sha1'
 
-module SimpleCaptcha #:nodoc
+module SessionCaptcha #:nodoc
   module Utils #:nodoc
     # Execute command with params and return output if exit status equal expected_outcodes
     def self.run(cmd, params = "", expected_outcodes = 0)
       command = %Q[#{cmd} #{params}].gsub(/\s+/, " ")
       command = "#{command} 2>&1"
 
-      unless (image_magick_path = SimpleCaptcha.image_magick_path).blank?
+      unless (image_magick_path = SessionCaptcha.image_magick_path).blank?
         command = File.join(image_magick_path, command)
       end
 
@@ -20,12 +20,12 @@ module SimpleCaptcha #:nodoc
       output
     end
 
-    def self.simple_captcha_value(key) #:nodoc
-      SimpleCaptchaData.get_data(key).value rescue nil
+    def self.session_captcha_value(key) #:nodoc
+      SessionCaptchaData.get_data(key).value rescue nil
     end
 
-    def self.simple_captcha_passed!(key) #:nodoc
-      SimpleCaptchaData.remove_data(key)
+    def self.session_captcha_passed!(key) #:nodoc
+      SessionCaptchaData.remove_data(key)
     end
 
     def self.generate_key(*args)

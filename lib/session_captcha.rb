@@ -1,17 +1,17 @@
 # encoding: utf-8
 
-module SimpleCaptcha
-  autoload :Utils,             'simple_captcha/utils'
+module SessionCaptcha
+  autoload :Utils,             'session_captcha/utils'
 
-  autoload :ImageHelpers,      'simple_captcha/image'
-  autoload :ViewHelper,        'simple_captcha/view'
-  autoload :ControllerHelpers, 'simple_captcha/controller'
-  autoload :ModelHelpers,      'simple_captcha/active_record'
+  autoload :ImageHelpers,      'session_captcha/image'
+  autoload :ViewHelper,        'session_captcha/view'
+  autoload :ControllerHelpers, 'session_captcha/controller'
+  autoload :ModelHelpers,      'session_captcha/active_record'
 
-  autoload :FormBuilder,       'simple_captcha/form_builder'
-  autoload :CustomFormBuilder, 'simple_captcha/formtastic'
+  autoload :FormBuilder,       'session_captcha/form_builder'
+  autoload :CustomFormBuilder, 'session_captcha/formtastic'
 
-  autoload :SimpleCaptchaData, 'simple_captcha/simple_captcha_data'
+  autoload :SessionCaptchaData, 'session_captcha/session_captcha_data'
 
   mattr_accessor :image_size
   @@image_size = "100x28"
@@ -40,7 +40,7 @@ module SimpleCaptcha
   @@image_magick_path = ''
 
   def self.add_image_style(name, params = [])
-    SimpleCaptcha::ImageHelpers.image_styles.update(name.to_s => params)
+    SessionCaptcha::ImageHelpers.image_styles.update(name.to_s => params)
   end
 
   def self.setup
@@ -48,4 +48,4 @@ module SimpleCaptcha
   end
 end
 
-require 'simple_captcha/railtie'
+require 'session_captcha/railtie'

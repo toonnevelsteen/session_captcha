@@ -1,4 +1,4 @@
-module SimpleCaptcha #:nodoc
+module SessionCaptcha #:nodoc
   module ImageHelpers #:nodoc
 
     mattr_accessor :image_styles
@@ -56,23 +56,23 @@ module SimpleCaptcha #:nodoc
 
     private
 
-      def generate_simple_captcha_image(simple_captcha_key) #:nodoc
-        amplitude, frequency = ImageHelpers.distortion(SimpleCaptcha.distortion)
-        text = Utils::simple_captcha_value(simple_captcha_key)
+      def generate_session_captcha_image(session_captcha_key) #:nodoc
+        amplitude, frequency = ImageHelpers.distortion(SessionCaptcha.distortion)
+        text = Utils::session_captcha_value(session_captcha_key)
 
-        params = ImageHelpers.image_params(SimpleCaptcha.image_style).dup
-        params << "-size #{SimpleCaptcha.image_size}"
+        params = ImageHelpers.image_params(SessionCaptcha.image_style).dup
+        params << "-size #{SessionCaptcha.image_size}"
         params << "-wave #{amplitude}x#{frequency}"
         params << "-gravity 'Center'"
         params << "-pointsize 22"
         params << "-implode 0.2"
 
-        dst = RUBY_VERSION < '1.9' ? Tempfile.new('simple_captcha.jpg') : Tempfile.new(['simple_captcha', '.jpg'])
+        dst = RUBY_VERSION < '1.9' ? Tempfile.new('session_captcha.jpg') : Tempfile.new(['session_captcha', '.jpg'])
         dst.binmode
 
         params << "label:#{text} '#{File.expand_path(dst.path)}'"
 
-        SimpleCaptcha::Utils::run("convert", params.join(' '))
+        SessionCaptcha::Utils::run("convert", params.join(' '))
 
         dst.close
 

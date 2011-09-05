@@ -1,6 +1,6 @@
-module SimpleCaptcha
-  class SimpleCaptchaData < ::ActiveRecord::Base
-    set_table_name "simple_captcha_data"
+module SessionCaptcha
+  class SessionCaptchaData < ::ActiveRecord::Base
+    set_table_name "session_captcha_data"
     
     attr_accessible :key, :value
     

@@ -1,4 +1,4 @@
-module SimpleCaptcha #:nodoc
+module SessionCaptcha #:nodoc
   module ModelHelpers #:nodoc
     def self.included(base)
       base.extend(SingletonMethods)
@@ -8,7 +8,7 @@ module SimpleCaptcha #:nodoc
     #
     #  class User < ActiveRecord::Base
     #
-    #    apply_simple_captcha :message => "my customized message"
+    #    apply_session_captcha :message => "my customized message"
     #
     #  end
     #
@@ -29,11 +29,11 @@ module SimpleCaptcha #:nodoc
     #
     #  @user.save                # when captcha validation is not required.
     module SingletonMethods
-      def apply_simple_captcha(options = {})
+      def apply_session_captcha(options = {})
         options = { :add_to_base => false }.merge(options)
                   
-        write_inheritable_attribute :simple_captcha_options, options
-        class_inheritable_reader :simple_captcha_options
+        write_inheritable_attribute :session_captcha_options, options
+        class_inheritable_reader :session_captcha_options
         
         unless self.is_a?(ClassMethods)
           include InstanceMethods
@@ -54,12 +54,12 @@ module SimpleCaptcha #:nodoc
       end
       
       def is_captcha_valid?
-        if captcha && captcha.upcase.delete(" ") == SimpleCaptcha::Utils::simple_captcha_value(captcha_key)
-          SimpleCaptcha::Utils::simple_captcha_passed!(captcha_key)
+        if captcha && captcha.upcase.delete(" ") == SessionCaptcha::Utils::session_captcha_value(captcha_key)
+          SessionCaptcha::Utils::session_captcha_passed!(captcha_key)
           return true
         else
-          message = simple_captcha_options[:message] || I18n.t(self.class.model_name.downcase, :scope => [:simple_captcha, :message], :default => :default)
-          simple_captcha_options[:add_to_base] ? errors.add_to_base(message) : errors.add(:captcha, message)
+          message = session_captcha_options[:message] || I18n.t(self.class.model_name.downcase, :scope => [:session_captcha, :message], :default => :default)
+          session_captcha_options[:add_to_base] ? errors.add_to_base(message) : errors.add(:captcha, message)
           return false
         end
       end
