@@ -1,5 +1,14 @@
 module SessionCaptcha #:nodoc
   module ControllerHelpers #:nodoc
+
+    def self.included(c)
+      c.class_eval do
+        include ActionController::Streaming
+        include SessionCaptcha::ImageHelpers
+      end
+    end
+    
+
     def session_captcha_valid?
       return true if Rails.env.test?
       
@@ -16,6 +25,13 @@ module SessionCaptcha #:nodoc
       hashed_value = SessionCaptcha::Utils::generate_key(session[:session_id], value)
 
       set_session_captcha_data(hashed_value)
+
+      begin
+        filename = generate_session_captcha_image(value)
+        send_file( filename, :type => 'image/jpeg', :disposition => 'inline', :filename => 'session_captcha.jpg' )
+      ensure
+        File.unlink(filename) if filename
+      end
     end
 
     private
