@@ -56,9 +56,9 @@ module SessionCaptcha #:nodoc
 
     private
 
-      def generate_session_captcha_image(session_captcha_key) #:nodoc
+      def generate_session_captcha_image(session_captcha_value) #:nodoc
         amplitude, frequency = ImageHelpers.distortion(SessionCaptcha.distortion)
-        text = Utils::session_captcha_value(session_captcha_key)
+        text = session_captcha_value
 
         params = ImageHelpers.image_params(SessionCaptcha.image_style).dup
         params << "-size #{SessionCaptcha.image_size}"
