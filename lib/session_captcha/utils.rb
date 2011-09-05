@@ -32,5 +32,18 @@ module SessionCaptcha #:nodoc
       args << Time.now.to_s
       Digest::SHA1.hexdigest(args.join)
     end
+
+    def self.generate_session_captcha_data(code='alfanumeric')
+      value = ""
+
+      if code.to_s == 'alfanumeric'
+        SessionCaptcha.length.times{value << (65 + rand(26)).chr}
+      else
+        # 'numeric'
+        SessionCaptcha.length.times{value << (48 + rand(10)).chr}
+      end
+
+      value
+    end
   end
 end
