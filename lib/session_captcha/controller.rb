@@ -25,5 +25,18 @@ module SessionCaptcha #:nodoc
         return false
       end
     end
+
+    def generate_captcha
+      value = SessionCaptcha::Utils::generate_session_captcha_data('alfanumeric')
+      hashed_value = SessionCaptcha::Utils::generate_key(session[:session_id], value)
+
+      set_session_captcha_data(hashed_value)
+    end
+
+    private
+
+    def set_session_captcha_data(hashed_value)
+      session[:captcha] = hashed_value
+    end
   end
 end
