@@ -1,5 +1,5 @@
 module SessionCaptcha
-  class CustomFormBuilder < Formtastic::SemanticFormBuilder
+  class CustomFormBuilder < Formtastic::FormBuilder
 
     private
 
