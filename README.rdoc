@@ -1,0 +1,177 @@
+= SessionCaptcha
+
+SessionCaptcha is an easy to use CAPTCHA plugin that uses the session to temporarily store the hashed value of the generated secret.
+The secret and image are securely destroyed after completion of the transaction.
+
+
+== Requirements
+
+* {Ruby}[http://ruby-lang.org/] >= 1.8.7
+* {Rails}[http://github.com/rails/rails] >= 3
+* ImageMagick should be installed on your machine to use this plugin.
+  visit http://www.imagemagick.org/script/index.php for more details.
+
+== Installation
+
+gem 'session_captcha', :git => 'git://github.com/trimentor/session_captcha.git'
+
+
+== Setup
+
+After installation, follow these simple steps to setup the plugin. The setup will depend
+on the version of rails your application is using.
+
+  rails generate session_captcha
+
+The following files will be created
+
+  config/initializers/session_captcha.rb
+  app/views/session_captcha/_session_captcha.rb
+
+The initializer "config/initializers/session_captcha.rb" will contain a randomly generated salt.
+Create your own salt with for example a program like +pwgen+ (Linux).
+
+  pwgen -s -y -n 64 1
+
+
+== Usage
+
+Add the following line in the controller where you want to generate a CAPTCHA and verify user input
+
+  include SessionCaptcha::ControllerHelpers
+
+Next add a route in the file +routes.rb+ for the controller action +generate_captcha+.
+
+In the view file within the form tag add this code
+
+  <%= show_session_captcha generate_captcha_url %>
+
+and in the controller's action authenticate it as
+
+  if session_captcha_valid?
+    do this
+  else
+    do that
+  end
+
+
+=== Options
+
+==== Controller Options
+
+* *code* - return 'alfanumeric' or 'numeric' only
+
+Default is 'alfanumeric'. Overrule the controller action +generate_captcha+ to change it.
+
+==== View Options
+
+* *label* - provides the custom text b/w the image and the text field, the default is "type the code from the image"
+
+* *object* - the name of the object of the model class
+
+==== Global Options
+
+* *image_style* - provides the specific image style for the captcha image.
+There are eight different styles available with the plugin as...
+  1) simply_blue
+  2) simply_red
+  3) simply_green
+  4) charcoal_grey
+  5) embosed_silver
+  6) all_black
+  7) distorted_black
+  8) almost_invisible
+Default style is 'simply_blue'.
+You can also specify 'random' to select the random image style.
+
+* *distortion* - handles the complexity of the image. The :distortion can be set to 'low', 'medium' or 'high'. Default is 'low'.
+
+Create "rails_root/config/initializers/session_captcha.rb"
+
+  SessionCaptcha.setup do |sc|
+    # default: 100x28
+    sc.image_size = '120x40'
+
+    # default: 5
+    sc.length = 6
+
+    # default: simply_blue
+    # possible values:
+    # 'embosed_silver',
+    # 'simply_red',
+    # 'simply_green',
+    # 'simply_blue',
+    # 'distorted_black',
+    # 'all_black',
+    # 'charcoal_grey',
+    # 'almost_invisible'
+    # 'random'
+    sc.image_style = 'simply_green'
+
+    # default: low
+    # possible values: 'low', 'medium', 'high', 'random'
+    sc.distortion = 'medium'
+  end
+
+You can add your own style:
+
+  SessionCaptcha.setup do |sc|
+    sc.image_style = 'mycaptha'
+    sc.add_image_style('mycaptha', [
+        "-background '#F4F7F8'",
+        "-fill '#86818B'",
+        "-border 1",
+        "-bordercolor '#E0E2E3'"])
+  end
+
+You can provide the path where image_magick is installed as well:
+
+  SessionCaptcha.setup do |sc|
+    sc.image_magick_path = '/usr/bin' # you can check this from console by running: which convert
+  end
+
+==== How to change the CSS for SessionCaptcha DOM elements?
+
+You can change the CSS of the SessionCaptcha DOM elements as per your need in this file.
+
+  /app/views/session_captcha/_session_captcha.erb
+
+
+== Bug Tracker
+
+Have a bug? Please create an issue here on GitHub!
+
+https://github.com/trimentor/session_captcha/issues
+
+
+== Authors
+
+* *Author* : {Sur}[http://expressica.com/simple_captcha/]
+
+* *Rails 3 Plugin* : {Igor Galeta}[https://github.com/galetahub/simple-captcha]
+
+* *SessionCaptcha* : {Kjel Delaey}[https://github.com/trimentor/session_captcha]
+
+
+== Copyright and License
+
+Copyright (c) 2008 {Sur}[http://expressica.com/]
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
