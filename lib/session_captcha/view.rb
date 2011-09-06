@@ -39,36 +39,5 @@ module SessionCaptcha #:nodoc
           text_field_tag(:captcha, nil, :autocomplete => 'off')
         end
       end
-
-      def set_session_captcha_data(key, options={})
-        code_type = options[:code_type]
-        
-        value = generate_session_captcha_data(code_type)
-        data = SessionCaptcha::SessionCaptchaData.get_data(key)
-        data.value = value
-        data.save
-        key
-      end
-   
-      def generate_session_captcha_data(code)
-        value = ''
-        
-        case code
-          when 'numeric' then 
-            SessionCaptcha.length.times{value << (48 + rand(10)).chr}
-          else
-            SessionCaptcha.length.times{value << (65 + rand(26)).chr}
-        end
-        
-        return value
-      end
-      
-      def session_captcha_key(key_name = nil)
-        if key_name.nil?
-          session[:captcha] ||= SessionCaptcha::Utils.generate_key(session[:id].to_s, 'captcha')
-        else
-          SessionCaptcha::Utils.generate_key(session[:id].to_s, key_name)
-        end
-      end 
   end
 end

@@ -20,14 +20,6 @@ module SessionCaptcha #:nodoc
       output
     end
 
-    def self.session_captcha_value(key) #:nodoc
-      SessionCaptchaData.get_data(key).value rescue nil
-    end
-
-    def self.session_captcha_passed!(key) #:nodoc
-      SessionCaptchaData.remove_data(key)
-    end
-
     def self.generate_key(*args)
       args << Rails.application.config.session_captcha_salt
       Digest::SHA1.hexdigest(args.join)

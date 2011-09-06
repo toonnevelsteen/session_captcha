@@ -6,12 +6,9 @@ module SessionCaptcha
   autoload :ImageHelpers,      'session_captcha/image'
   autoload :ViewHelper,        'session_captcha/view'
   autoload :ControllerHelpers, 'session_captcha/controller'
-  autoload :ModelHelpers,      'session_captcha/active_record'
 
   autoload :FormBuilder,       'session_captcha/form_builder'
   autoload :CustomFormBuilder, 'session_captcha/formtastic'
-
-  autoload :SessionCaptchaData, 'session_captcha/session_captcha_data'
 
   mattr_accessor :image_size
   @@image_size = "100x28"
