@@ -29,7 +29,7 @@ module SessionCaptcha #:nodoc
     end
 
     def self.generate_key(*args)
-      args << Time.now.to_s
+      args << Rails.application.config.session_captcha_salt
       Digest::SHA1.hexdigest(args.join)
     end
 
