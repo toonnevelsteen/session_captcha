@@ -9,7 +9,7 @@ module SessionCaptcha
       ActionView::Helpers::FormBuilder.send(:include, SessionCaptcha::FormBuilder)
       
       if Object.const_defined?("Formtastic")
-        Formtastic::SemanticFormHelper.builder = SessionCaptcha::CustomFormBuilder
+        Formtastic::Helpers::FormHelper.builder = SessionCaptcha::CustomFormBuilder
       end
     end
   end
