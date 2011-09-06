@@ -3,51 +3,21 @@ module SessionCaptcha #:nodoc
 
     # Simple Captcha is a very simplified captcha.
     #
-    # It can be used as a *Model* or a *Controller* based Captcha depending on what options
-    # we are passing to the method show_session_captcha.
-    #
     # *show_session_captcha* method will return the image, the label and the text box.
     # This method should be called from the view within your form as...
     #
-    # <%= show_session_captcha %>
-    #
-    # The available options to pass to this method are
-    # * label
-    # * object
+    # <%= show_session_captcha generate_captcha_url %>
     #
     # <b>Label:</b>
     #
     # default label is "type the text from the image", it can be modified by passing :label as
     #
-    # <%= show_session_captcha(:label => "new captcha label") %>.
-    #
-    # *Object*
-    #
-    # This option is needed to create a model based captcha.
-    # If this option is not provided, the captcha will be controller based and
-    # should be checked in controller's action just by calling the method session_captcha_valid?
-    #
-    # To make a model based captcha give this option as...
-    #
-    # <%= show_session_captcha(:object => "user") %>
-    # and also call the method apply_session_captcha in the model
-    # this will consider "user" as the object of the model class.
-    #
-    # *Examples*
-    # * controller based
-    # <%= show_session_captcha(:label => "Human Authentication: type the text from image above") %>
-    # * model based
-    # <%= show_session_captcha(:object => "person", :label => "Human Authentication: type the text from image above") %>
-    #
-    # Find more detailed examples with sample images here on my blog http://EXPRESSICA.com
-    #
-    # All Feedbacks/CommentS/Issues/Queries are welcome.
-    def show_session_captcha(options={})
-      key = session_captcha_key(options[:object])
-      options[:field_value] = set_session_captcha_data(key, options)
-      
+    # <%= show_session_captcha(generate_captcha_url, :label => "new captcha label") %>.
+    def show_session_captcha(url, *args)
+      options = args.extract_options!
+
       defaults = {
-         :image => session_captcha_image(key, options),
+         :image => session_captcha_image(url),
          :label => options[:label] || I18n.t('session_captcha.label'),
          :field => session_captcha_field(options)
          }
@@ -57,13 +27,7 @@ module SessionCaptcha #:nodoc
 
     private
 
-      def session_captcha_image(session_captcha_key, options = {})
-        defaults = {}
-        defaults[:time] = options[:time] || Time.now.to_i
-        
-        query = defaults.collect{ |key, value| "#{key}=#{value}" }.join('&')
-        url = "/session_captcha/#{session_captcha_key}?#{query}"
-        
+      def session_captcha_image(url)
         "<img src='#{url}' alt='captcha' />".html_safe
       end
       
