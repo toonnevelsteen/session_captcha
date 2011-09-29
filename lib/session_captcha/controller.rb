@@ -28,7 +28,9 @@ module SessionCaptcha #:nodoc
 
       begin
         filename = generate_session_captcha_image(value)
-        send_file( filename, :type => 'image/jpeg', :disposition => 'inline', :filename => 'session_captcha.jpg' )
+        File.open(filename, 'r') do |f|
+          send_data (f.read, :type => 'image/jpeg', :disposition => 'inline', :filename => 'session_captcha.jpg' )
+        end
       ensure
         File.unlink(filename) if filename
       end
